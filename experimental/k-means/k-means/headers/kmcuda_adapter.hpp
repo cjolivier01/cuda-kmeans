@@ -4,7 +4,7 @@
 #include "interface.hpp"
 #include "layout_policies.hpp"
 #include "metric_policies.hpp"
-#include "cuda/cuda.hpp"
+#include "cuda.hpp"
 
 class KMCudaAlgorithm
 {

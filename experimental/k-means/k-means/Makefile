@@ -1,6 +1,6 @@
 CPP=g++
 STD=-std=c++14
-CFLAGS=-Wall -O3 $(STD) -DNDEBUG
+CFLAGS=-Wall -fPIC -O3 $(STD) -DNDEBUG
 NVCCFLAGS=-ccbin $(CPP) $(STD) -arch=sm_52
 INCLUDE=/usr/local/cuda/include ./headers ../../bpplib/include
 LDFLAGS=
@@ -22,7 +22,7 @@ all: $(TARGET)
 
 $(TARGET): $(HEADERS) $(CUOBJS) $(OBJS)
 	@echo Linking executable "$@" ...
-	@$(CPP) $(CFLAGS) $(addprefix -I,$(INCLUDE)) $(LDFLAGS) $(addprefix -L,$(LIBDIRS)) $(addprefix -l,$(LIBS)) -lcudart $(CUOBJS) $(OBJS) -o $@
+	$(CPP) $(CFLAGS) $(addprefix -I,$(INCLUDE)) $(LDFLAGS) $(addprefix -L,$(LIBDIRS)) $(addprefix -l,$(LIBS)) -lcudart -lcuda $(CUOBJS) $(OBJS) -o $@
 
 %.obj: %.cpp $(HEADERS)
 	@echo Compiling CPP file $< ...
@@ -34,7 +34,8 @@ $(TARGET): $(HEADERS) $(CUOBJS) $(OBJS)
 
 %.cuobj: %.cu $(HEADERS)
 	@echo Compiling kernels in $< ...
-	@nvcc $(NVCCFLAGS) $(addprefix -I,$(INCLUDE)) --compile -cudart static $< -o $@
+#  @nvcc $(NVCCFLAGS) $(addprefix -I,$(INCLUDE)) --compile -cudart static $< -o $@
+	@nvcc $(NVCCFLAGS) $(addprefix -I,$(INCLUDE)) --compile $< -o $@
 
 
 # Cleaning Stuff
